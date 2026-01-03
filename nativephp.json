@@ -1,0 +1,56 @@
+{
+    "namespace": "Device",
+
+    "bridge_functions": [
+        {
+            "name": "Device.Vibrate",
+            "android": "com.nativephp.device.DeviceFunctions.Vibrate",
+            "ios": "DeviceFunctions.Vibrate",
+            "description": "Vibrate the device"
+        },
+        {
+            "name": "Device.ToggleFlashlight",
+            "android": "com.nativephp.device.DeviceFunctions.ToggleFlashlight",
+            "ios": "DeviceFunctions.ToggleFlashlight",
+            "description": "Toggle the device flashlight on/off"
+        },
+        {
+            "name": "Device.GetId",
+            "android": "com.nativephp.device.DeviceFunctions.GetId",
+            "ios": "DeviceFunctions.GetId",
+            "description": "Get the unique device identifier"
+        },
+        {
+            "name": "Device.GetInfo",
+            "android": "com.nativephp.device.DeviceFunctions.GetInfo",
+            "ios": "DeviceFunctions.GetInfo",
+            "description": "Get detailed device information"
+        },
+        {
+            "name": "Device.GetBatteryInfo",
+            "android": "com.nativephp.device.DeviceFunctions.GetBatteryInfo",
+            "ios": "DeviceFunctions.GetBatteryInfo",
+            "description": "Get battery level and charging status"
+        }
+    ],
+
+    "android": {
+        "permissions": [
+            "android.permission.VIBRATE",
+            "android.permission.FLASHLIGHT"
+        ],
+        "dependencies": {
+            "implementation": []
+        }
+    },
+
+    "ios": {
+        "info_plist": {},
+        "dependencies": {
+            "swift_packages": [],
+            "pods": []
+        }
+    },
+
+    "events": []
+}
