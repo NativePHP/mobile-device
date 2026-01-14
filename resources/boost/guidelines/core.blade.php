@@ -2,100 +2,80 @@
 
 Device hardware operations including vibration, flashlight, device info, and battery status.
 
-### Installation
-
-```bash
-composer require nativephp/device
-php artisan native:plugin:register nativephp/device
-```
-
 ### PHP Usage (Livewire/Blade)
-
-Use the `Device` facade:
 
 @verbatim
 <code-snippet name="Device Operations" lang="php">
 use Native\Mobile\Facades\Device;
 
+// Get unique device ID
+$id = Device::getId();
+
+// Get device info (JSON)
+$info = Device::getInfo();
+$deviceInfo = json_decode($info);
+// $deviceInfo->platform, $deviceInfo->model, $deviceInfo->osVersion
+
 // Vibrate the device
 Device::vibrate();
 
 // Toggle flashlight
-$result = Device::toggleFlashlight();
-// Returns: ['success' => true, 'state' => true|false]
-
-// Get device ID
-$result = Device::getId();
-// Returns: ['id' => 'unique-device-id']
-
-// Get device info
-$result = Device::getInfo();
-// Returns JSON with name, model, platform, osVersion, etc.
+$result = Device::flashlight();
+// result.state = true (on) or false (off)
 
 // Get battery info
-$result = Device::getBatteryInfo();
-// Returns JSON with batteryLevel (0.0-1.0) and isCharging
+$batteryInfo = Device::getBatteryInfo();
+// batteryLevel: 0-1 (e.g., 0.85 = 85%), isCharging: true/false
 </code-snippet>
 @endverbatim
 
-### JavaScript Usage
+### JavaScript Usage (Vue/React/Inertia)
 
 @verbatim
-<code-snippet name="Device Operations in JavaScript" lang="js">
+<code-snippet name="Device Operations in JavaScript" lang="javascript">
 import { device } from '#nativephp';
+
+// Get unique device ID
+const result = await device.getId();
+const deviceId = result.id;
+
+// Get device info
+const infoResult = await device.getInfo();
+const deviceInfo = JSON.parse(infoResult.info);
+console.log(deviceInfo.platform);  // 'ios' or 'android'
+console.log(deviceInfo.model);     // e.g., 'iPhone13,4'
+console.log(deviceInfo.osVersion); // e.g., '17.0'
 
 // Vibrate the device
 await device.vibrate();
 
 // Toggle flashlight
-const flashResult = await device.toggleFlashlight();
-console.log('Flashlight state:', flashResult.state);
-
-// Get device ID
-const idResult = await device.getId();
-console.log('Device ID:', idResult.id);
-
-// Get device info
-const infoResult = await device.getInfo();
-const info = JSON.parse(infoResult.info);
-console.log('Platform:', info.platform);
+const flashResult = await device.flashlight();
+console.log(flashResult.state); // true = on, false = off
 
 // Get battery info
 const batteryResult = await device.getBatteryInfo();
 const battery = JSON.parse(batteryResult.info);
-console.log('Battery level:', Math.round(battery.batteryLevel * 100) + '%');
+console.log(batteryResult.batteryLevel); // 0-1
+console.log(batteryResult.isCharging);   // true/false
 </code-snippet>
 @endverbatim
 
-### Available Methods
-
-- `Device::vibrate()` - Vibrate the device
-- `Device::toggleFlashlight()` - Toggle flashlight on/off, returns state
-- `Device::getId()` - Get unique device identifier
-- `Device::getInfo()` - Get detailed device information (JSON)
-- `Device::getBatteryInfo()` - Get battery level and charging status (JSON)
-
 ### Device Info Properties
 
-The `getInfo()` method returns JSON containing:
-- `name` - Device name
-- `model` - Device model
-- `platform` - "ios" or "android"
-- `operatingSystem` - OS name
-- `osVersion` - OS version string
-- `manufacturer` - Device manufacturer
-- `isVirtual` - Whether running in simulator/emulator
-- `memUsed` - Memory usage in bytes
-- `webViewVersion` - WebView version
+| Property | Type | Description |
+|----------|------|-------------|
+| name | string | Device name |
+| model | string | Device model identifier |
+| platform | 'ios' \| 'android' | Operating platform |
+| osVersion | string | OS version string |
+| isVirtual | boolean | Running in simulator/emulator |
+| memUsed | number | App memory usage in bytes |
+| webViewVersion | string | Browser version |
 
 ### Battery Info Properties
 
-The `getBatteryInfo()` method returns JSON containing:
-- `batteryLevel` - Battery level from 0.0 to 1.0
-- `isCharging` - Whether device is charging
-
-### Platform Details
-
-- **iOS**: Uses UIDevice for info, AVCaptureDevice for flashlight
-- **Android**: Uses Build class for info, CameraManager for flashlight
-- Vibration uses standard platform APIs
+| Property | Type | Description |
+|----------|------|-------------|
+| batteryLevel | number | Charge percentage (0-1) |
+| isCharging | boolean | Current charging status |
