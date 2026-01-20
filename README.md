@@ -124,7 +124,3 @@ Battery info includes:
 
 ### iOS
 No special permissions required.
-
-## License
-
-MIT
