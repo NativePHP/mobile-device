@@ -42,26 +42,26 @@ $result = Device::getBatteryInfo();
 ### JavaScript (Vue/React/Inertia)
 
 ```js
-import { device } from '#nativephp';
+import { Device } from '#nativephp';
 
 // Vibrate the device
-await device.vibrate();
+await Device.vibrate();
 
 // Toggle flashlight
-const flashResult = await device.toggleFlashlight();
+const flashResult = await Device.toggleFlashlight();
 console.log('Flashlight state:', flashResult.state);
 
 // Get device ID
-const idResult = await device.getId();
+const idResult = await Device.getId();
 console.log('Device ID:', idResult.id);
 
 // Get device info
-const infoResult = await device.getInfo();
+const infoResult = await Device.getInfo();
 const info = JSON.parse(infoResult.info);
 console.log('Platform:', info.platform);
 
 // Get battery info
-const batteryResult = await device.getBatteryInfo();
+const batteryResult = await Device.getBatteryInfo();
 const battery = JSON.parse(batteryResult.info);
 console.log('Battery level:', battery.batteryLevel * 100 + '%');
 ```
