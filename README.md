@@ -37,6 +37,10 @@ $result = Device::getInfo();
 // Get battery info
 $result = Device::getBatteryInfo();
 // Returns: ['info' => '{"batteryLevel":0.85,"isCharging":false}']
+
+// Get localization info
+$localization = Device::localization();
+// Returns DeviceLocale object: $localization->locale, $localization->languageCode, etc.
 ```
 
 ### JavaScript (Vue/React/Inertia)
@@ -64,6 +68,12 @@ console.log('Platform:', info.platform);
 const batteryResult = await Device.getBatteryInfo();
 const battery = JSON.parse(batteryResult.info);
 console.log('Battery level:', battery.batteryLevel * 100 + '%');
+
+// Get localization info
+const localeResult = await Device.getLocale();
+const localization = JSON.parse(localeResult.info);
+console.log('Language:', localization.languageCode);
+console.log('Timezone:', localization.timezone);
 ```
 
 ## Methods
@@ -115,6 +125,20 @@ Get battery level and charging status.
 Battery info includes:
 - `batteryLevel` - Battery level from 0.0 to 1.0
 - `isCharging` - Whether device is charging
+
+### `localization(): DeviceLocale`
+
+Get device locale and regional settings.
+
+**Returns:** `DeviceLocale` object (PHP) / `{ info: string }` JSON string (JS)
+
+Localization info includes:
+- `locale` - Full locale identifier (e.g., "en_GB")
+- `languageCode` - Language code (e.g., "en")
+- `regionCode` - Region/country code (e.g., "GB")
+- `timezone` - Timezone identifier (e.g., "America/New_York")
+- `currencyCode` - Currency code (e.g., "GBP")
+- `preferredLanguage` - User's preferred language (e.g., "en-GB")
 
 ## Permissions
 

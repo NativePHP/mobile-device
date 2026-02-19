@@ -8,6 +8,7 @@ import android.hardware.camera2.CameraManager
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Debug
+import android.os.LocaleList
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -272,6 +273,55 @@ object DeviceFunctions {
                 mapOf("info" to result)
             } catch (e: Exception) {
                 Log.e("Device.GetBatteryInfo", "Error: ${e.message}", e)
+                mapOf("info" to "{\"error\": \"${e.message}\"}")
+            }
+        }
+    }
+
+    /**
+     * Get device locale and regional settings
+     * Parameters: none
+     * Returns:
+     *   - info: JSON string with locale, language, region, timezone, currency, and preferred language
+     */
+    class GetLocale(private val context: Context) : BridgeFunction {
+        override fun execute(parameters: Map<String, Any>): Map<String, Any> {
+            Log.d("Device.GetLocale", "Getting locale info")
+
+            return try {
+                val locale = java.util.Locale.getDefault()
+
+                val currencyCode = try {
+                    java.util.Currency.getInstance(locale).currencyCode
+                } catch (e: Exception) {
+                    ""
+                }
+
+                val preferredLanguage = try {
+                    val localeList = LocaleList.getDefault()
+                    if (localeList.size() > 0) {
+                        localeList.get(0).toLanguageTag()
+                    } else {
+                        locale.language
+                    }
+                } catch (e: Exception) {
+                    locale.language
+                }
+
+                val localeInfo = JSONObject().apply {
+                    put("locale", locale.toString())
+                    put("languageCode", locale.language)
+                    put("regionCode", locale.country)
+                    put("timezone", java.util.TimeZone.getDefault().id)
+                    put("currencyCode", currencyCode)
+                    put("preferredLanguage", preferredLanguage)
+                }
+
+                val result = localeInfo.toString()
+                Log.d("Device.GetLocale", "Locale info retrieved")
+                mapOf("info" to result)
+            } catch (e: Exception) {
+                Log.e("Device.GetLocale", "Error: ${e.message}", e)
                 mapOf("info" to "{\"error\": \"${e.message}\"}")
             }
         }

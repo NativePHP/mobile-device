@@ -233,4 +233,48 @@ enum DeviceFunctions {
             }
         }
     }
+
+    // MARK: - Device.GetLocale
+
+    /// Get device locale and regional settings
+    /// Parameters: none
+    /// Returns:
+    ///   - info: JSON string with locale, language, region, timezone, currency, and preferred language
+    class GetLocale: BridgeFunction {
+        func execute(parameters: [String: Any]) throws -> [String: Any] {
+            print("Device.GetLocale called")
+
+            let current = Locale.current
+
+            let localeIdentifier = current.identifier
+            let languageCode = current.language.languageCode?.identifier ?? ""
+            let regionCode = current.region?.identifier ?? ""
+            let timezone = TimeZone.current.identifier
+            let currencyCode = current.currency?.identifier ?? ""
+            let preferredLanguage = Locale.preferredLanguages.first ?? (current.language.languageCode?.identifier ?? "")
+
+            let localeInfo: [String: Any] = [
+                "locale": localeIdentifier,
+                "languageCode": languageCode,
+                "regionCode": regionCode,
+                "timezone": timezone,
+                "currencyCode": currencyCode,
+                "preferredLanguage": preferredLanguage
+            ]
+
+            print("Locale info collected")
+
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: localeInfo, options: [])
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    return ["info": jsonString]
+                } else {
+                    return ["info": "{\"error\": \"Failed to convert JSON data to string\"}"]
+                }
+            } catch {
+                print("Error serializing locale info: \(error)")
+                return ["info": "{\"error\": \"\(error.localizedDescription)\"}"]
+            }
+        }
+    }
 }
