@@ -31,6 +31,12 @@
             "android": "com.nativephp.device.DeviceFunctions.GetBatteryInfo",
             "ios": "DeviceFunctions.GetBatteryInfo",
             "description": "Get battery level and charging status"
+        },
+        {
+            "name": "Device.GetLocale",
+            "android": "com.nativephp.device.DeviceFunctions.GetLocale",
+            "ios": "DeviceFunctions.GetLocale",
+            "description": "Get device locale and regional settings"
         }
     ],
 
