@@ -102,6 +102,7 @@ Device info includes:
 - `operatingSystem` - OS name
 - `osVersion` - OS version string
 - `manufacturer` - Device manufacturer
+- `language` - Device language as BCP 47 tag (e.g. "en-US")
 - `isVirtual` - Whether running in simulator/emulator
 - `memUsed` - Memory usage in bytes
 - `webViewVersion` - WebView version
