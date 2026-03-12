@@ -12,7 +12,6 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.provider.Settings
-import android.util.Log
 import android.webkit.WebView
 import androidx.annotation.RequiresApi
 import com.nativephp.mobile.bridge.BridgeFunction
@@ -48,14 +47,11 @@ object DeviceFunctions {
                 if (vibrator != null) {
                     val effect = VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE)
                     vibrator.vibrate(effect)
-                    Log.d("Device.Vibrate", "Vibration triggered")
                     mapOf("success" to true)
                 } else {
-                    Log.e("Device.Vibrate", "Vibrator service not available")
                     mapOf("success" to false)
                 }
             } catch (e: Exception) {
-                Log.e("Device.Vibrate", "Error: ${e.message}", e)
                 mapOf("success" to false, "error" to (e.message ?: "Unknown error"))
             }
         }
@@ -80,14 +76,11 @@ object DeviceFunctions {
                 if (cameraId != null) {
                     flashlightState = !flashlightState
                     cameraManager.setTorchMode(cameraId, flashlightState)
-                    Log.d("Device.ToggleFlashlight", "Flashlight toggled to: $flashlightState")
                     mapOf("success" to true, "state" to flashlightState)
                 } else {
-                    Log.e("Device.ToggleFlashlight", "Flashlight not available on this device")
                     mapOf("success" to false, "error" to "Flashlight not available")
                 }
             } catch (e: Exception) {
-                Log.e("Device.ToggleFlashlight", "Error: ${e.message}", e)
                 mapOf("success" to false, "error" to (e.message ?: "Unknown error"))
             }
         }
@@ -101,15 +94,11 @@ object DeviceFunctions {
      */
     class GetId(private val context: Context) : BridgeFunction {
         override fun execute(parameters: Map<String, Any>): Map<String, Any> {
-            Log.d("Device.GetId", "Getting device ID")
-
             return try {
                 val androidId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
                 val deviceId = androidId ?: "unknown"
-                Log.d("Device.GetId", "Device ID retrieved: $deviceId")
                 mapOf("id" to deviceId)
             } catch (e: Exception) {
-                Log.e("Device.GetId", "Error: ${e.message}", e)
                 mapOf("id" to "unknown")
             }
         }
@@ -123,8 +112,6 @@ object DeviceFunctions {
      */
     class GetInfo(private val context: Context) : BridgeFunction {
         override fun execute(parameters: Map<String, Any>): Map<String, Any> {
-            Log.d("Device.GetInfo", "Getting device info")
-
             return try {
                 val deviceInfo = JSONObject().apply {
                     // Device name (Android 7.1+)
@@ -159,6 +146,9 @@ object DeviceFunctions {
                     // Manufacturer
                     put("manufacturer", Build.MANUFACTURER)
 
+                    // Language (BCP 47 tag, e.g. "en-US")
+                    put("language", java.util.Locale.getDefault().toLanguageTag())
+
                     // Virtual device detection
                     put("isVirtual", isEmulator())
 
@@ -170,10 +160,8 @@ object DeviceFunctions {
                 }
 
                 val result = deviceInfo.toString()
-                Log.d("Device.GetInfo", "Device info retrieved")
                 mapOf("info" to result)
             } catch (e: Exception) {
-                Log.e("Device.GetInfo", "Error: ${e.message}", e)
                 mapOf("info" to "{\"error\": \"${e.message}\"}")
             }
         }
@@ -208,7 +196,6 @@ object DeviceFunctions {
                 // Return total private memory in bytes
                 (memInfo.totalPrivateDirty * 1024).toLong()
             } catch (e: Exception) {
-                Log.e("Device.GetInfo", "Error getting memory usage", e)
                 -1L
             }
         }
@@ -228,7 +215,6 @@ object DeviceFunctions {
                     val chromeRegex = "Chrome/([\\d.]+)".toRegex()
                     chromeRegex.find(userAgent)?.groupValues?.get(1) ?: "unknown"
                 } catch (e2: Exception) {
-                    Log.e("Device.GetInfo", "Error getting WebView version", e2)
                     "unknown"
                 }
             }
@@ -243,8 +229,6 @@ object DeviceFunctions {
      */
     class GetBatteryInfo(private val context: Context) : BridgeFunction {
         override fun execute(parameters: Map<String, Any>): Map<String, Any> {
-            Log.d("Device.GetBatteryInfo", "Getting battery info")
-
             return try {
                 val batteryIntentFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
                 val batteryStatus = context.registerReceiver(null, batteryIntentFilter)
@@ -268,10 +252,8 @@ object DeviceFunctions {
                 }
 
                 val result = batteryInfo.toString()
-                Log.d("Device.GetBatteryInfo", "Battery info retrieved: ${(batteryLevel * 100).toInt()}%, charging: $isCharging")
                 mapOf("info" to result)
             } catch (e: Exception) {
-                Log.e("Device.GetBatteryInfo", "Error: ${e.message}", e)
                 mapOf("info" to "{\"error\": \"${e.message}\"}")
             }
         }

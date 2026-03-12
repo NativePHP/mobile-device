@@ -114,6 +114,9 @@ enum DeviceFunctions {
             // Get WebView version
             let webViewVersion = getWebViewVersion()
 
+            // Language (BCP 47 tag, e.g. "en-US")
+            let language = Locale.current.identifier(.bcp47)
+
             let deviceInfo: [String: Any] = [
                 "name": device.name,
                 "model": device.model,
@@ -122,6 +125,7 @@ enum DeviceFunctions {
                 "osVersion": device.systemVersion,
                 "iOSVersion": iOSVersionNumber,
                 "manufacturer": "Apple",
+                "language": language,
                 "isVirtual": isVirtual,
                 "memUsed": memUsed,
                 "webViewVersion": webViewVersion
