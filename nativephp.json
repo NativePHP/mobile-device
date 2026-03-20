@@ -1,6 +1,5 @@
 {
     "namespace": "Device",
-
     "bridge_functions": [
         {
             "name": "Device.Vibrate",
@@ -33,9 +32,8 @@
             "description": "Get battery level and charging status"
         }
     ],
-
     "android": {
-        "min_version": 33,
+        "min_version": 26,
         "permissions": [
             "android.permission.VIBRATE",
             "android.permission.FLASHLIGHT"
@@ -44,7 +42,6 @@
             "implementation": []
         }
     },
-
     "ios": {
         "min_version": "18.2",
         "info_plist": {},
@@ -53,6 +50,5 @@
             "pods": []
         }
     },
-
     "events": []
 }
