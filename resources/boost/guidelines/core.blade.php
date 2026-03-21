@@ -26,6 +26,10 @@ $result = Device::flashlight();
 // Get battery info
 $batteryInfo = Device::getBatteryInfo();
 // batteryLevel: 0-1 (e.g., 0.85 = 85%), isCharging: true/false
+
+// Get localization info
+$localization = Device::localization();
+// $localization->locale, $localization->languageCode, $localization->timezone, etc.
 </code-snippet>
 @endverbatim
 
@@ -58,6 +62,15 @@ const batteryResult = await device.getBatteryInfo();
 const battery = JSON.parse(batteryResult.info);
 console.log(batteryResult.batteryLevel); // 0-1
 console.log(batteryResult.isCharging);   // true/false
+
+// Get localization info
+const localeResult = await device.getLocale();
+const localization = JSON.parse(localeResult.info);
+console.log(localization.locale);            // e.g., 'en_GB'
+console.log(localization.languageCode);      // e.g., 'en'
+console.log(localization.timezone);          // e.g., 'America/New_York'
+console.log(localization.currencyCode);      // e.g., 'GBP'
+console.log(localization.preferredLanguage); // e.g., 'en-GB'
 </code-snippet>
 @endverbatim
 
@@ -79,3 +92,14 @@ console.log(batteryResult.isCharging);   // true/false
 |----------|------|-------------|
 | batteryLevel | number | Charge percentage (0-1) |
 | isCharging | boolean | Current charging status |
+
+### Localization Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| locale | string | Full locale identifier (e.g., en_GB) |
+| languageCode | string | Language code (e.g., en) |
+| regionCode | string | Region/country code (e.g., GB) |
+| timezone | string | Timezone identifier (e.g., America/New_York) |
+| currencyCode | string | Currency code (e.g., GBP) |
+| preferredLanguage | string | User's preferred language (e.g., en-GB) |
